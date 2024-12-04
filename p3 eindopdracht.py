@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 
+# opmerking van ROOJ
 # Hoofd menu
 class GalgjeApp:
     def __init__(self, root):
