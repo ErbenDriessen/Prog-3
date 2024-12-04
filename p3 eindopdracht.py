@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 
+# Hoofd menu
 class GalgjeApp:
     def __init__(self, root):
         self.root = root
@@ -17,7 +18,7 @@ class GalgjeApp:
         self.current_frame = tk.Frame(self.root)
         self.current_frame.pack(pady=20)
 
-        tk.Label(self.current_frame, text="Welkom bij Spellen!", font=("Arial", 20)).pack(pady=10)
+        tk.Label(self.current_frame, text="Hoofd Menu", font=("Arial", 20)).pack(pady=10)
         tk.Button(self.current_frame, text="Speel Galgje", font=("Arial", 14), command=self.start_galgje).pack(pady=10)
         tk.Button(self.current_frame, text="Speel Raad het Getal", font=("Arial", 14), command=self.start_raad_getal).pack(pady=10)
         tk.Button(self.current_frame, text="Afsluiten", font=("Arial", 14), command=self.root.quit).pack(pady=10)
@@ -30,12 +31,13 @@ class GalgjeApp:
         self.current_frame.destroy()
         RaadHetGetal(self)
 
+# Galgje spel
 class Galgje:
     def __init__(self, app):
         self.app = app
         self.root = app.root
 
-        self.word_list = ["python", "programmeren", "ontwikkelaar", "algoritme", "debuggen"]
+        self.word_list = ["python", "programmeren", "ontwikkelaar", "algoritme", "debuggen"] # lijst aan woorden die het spel gebruikt
         self.reset_game()
 
         self.frame = tk.Frame(self.root)
@@ -60,25 +62,28 @@ class Galgje:
         tk.Button(self.frame, text="Terug naar hoofdmenu", command=self.return_to_menu, font=("Arial", 14)).pack(pady=10)
 
     def reset_game(self):
-        self.word = random.choice(self.word_list)
-        self.hidden_word = ["_"] * len(self.word)
-        self.guessed_letters = []
-        self.remaining_attempts = 6
+        self.word = random.choice(self.word_list) # Kies willekeurig woord uit de lijst
+        self.hidden_word = ["_"] * len(self.word) # Begin met alle letters verborgen
+        self.guessed_letters = [] # Lege lijst voor geraden letters
+        self.remaining_attempts = 6 # maximaal aantal four gokken
 
     def check_guess(self):
         guess = self.entry_guess.get().lower()
         self.entry_guess.delete(0, tk.END)
 
+        # Controle of gebruikers invoer geldig is
         if len(guess) != 1 or not guess.isalpha():
             messagebox.showerror("Fout", "Voer één letter in.")
             return
-
+        
+        #controle of de letter al geraden is
         if guess in self.guessed_letters:
             messagebox.showwarning("Let op", "Deze letter is al geraden!")
             return
 
-        self.guessed_letters.append(guess)
+        self.guessed_letters.append(guess) # Voeg letter toe aan lijst gegokkte
 
+        #controleer of de gok correct is
         if guess in self.word:
             for i, letter in enumerate(self.word):
                 if letter == guess:
@@ -90,6 +95,7 @@ class Galgje:
 
         self.label_guessed.config(text=f"Gegokte letters: {', '.join(self.guessed_letters)}")
 
+        # win/loss conditie
         if "_" not in self.hidden_word:
             messagebox.showinfo("Gefeliciteerd", f"Je hebt het woord geraden: {self.word}!")
             self.reset_game()
@@ -107,6 +113,7 @@ class Galgje:
         self.frame.destroy()
         self.app.show_main_menu()
 
+# Getal Spel
 class RaadHetGetal:
     def __init__(self, app):
         self.app = app
